@@ -1,0 +1,62 @@
+<div>
+    <nav class="navbar navbar-expand-sm bg-light">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link text-black" href="/main">Trang chủ</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link text-black" href="/main/san-pham">Sản phẩm</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link text-black" href="/main/danh-muc">Danh mục</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link text-black" href="/main/khac">Others</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link text-black" href="/main/users">Người dùng</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="/main/nguoi-dung"><img src="./images/winter-dog.jpg" width="50"
+                            height="50" class="rounded-circle" alt=""></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>description</th>
+                    <th>Category id</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr class=" align-middle">
+                    <td>{{this._id}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.cartegory_id.name}}</td>
+                    <td>
+                        <img class="rounded-circle" src={{this.image}} width="100" height="100" />
+                    </td>
+                    <td class="text-center">
+                        <a href="san-pham/{{this._id}}/edit" class="btn btn-link"><i class="fa-solid fa-pencil"></i></a>
+                    </td>
+                    <td class="text-center  align-middle">
+                        <a href="san-pham/{{this._id}}"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
+                    {{/each}}
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
