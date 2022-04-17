@@ -2,16 +2,40 @@
 const ProductService = require('./service');
 const catergoryService = require('../categories/service');
 const async = require('hbs/lib/async');
+const date = require('../../utils/date')
 
 exports.getProducts = async() => {
-    const data = await ProductService.getProducts();
-    const categories = await catergoryService.getCategories();
-    return data;
+    let products = await ProductService.getProducts();
+    products = products.map((item,index) =>{
+        item={
+            released: date.format(item.released),
+            _id: item._id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image,
+            description: item.description,
+            category_id: item.category_id,
+            index: index+1
+        }
+        return item;
+    })
+    return products;
 }
 
 exports.getProductById = async(id) =>{
-    const product = await ProductService.getProductById(id);
-    return product;
+    let product = await ProductService.getProductById(id);
+    product = {
+            released: date.format(product.released),
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: product.quantity,
+            image: product.image,
+            description: product.description,
+            category_id: product.category_id,
+        }
+        return product;
 }
 
 exports.insert = async (product) =>{
@@ -20,4 +44,8 @@ exports.insert = async (product) =>{
 
 exports.delete = async (id) =>{
     await ProductService.delete(id);
+}
+
+exports.update = async(id, product)=>{
+    await ProductService.update(id, product);
 }

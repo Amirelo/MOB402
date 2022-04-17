@@ -6,6 +6,8 @@ const categoryController = require('../components/categories/controller');
 const async = require('hbs/lib/async');
 const res = require('express/lib/response');
 
+const upload = require('../middle/upload');
+
 router.get('/', async function (req,res,next){
     res.render('main');
 })
@@ -37,20 +39,48 @@ router.get('/nguoi-dung', async function(req,res,next){
     res.render('current-user');
 })
 
-router.get('/:id/edit', async function(req, res,next){
+router.get('/san-pham/:id/edit', async function(req, res,next){
     const {id} = req.params;
-    const product = await productController.getProducts(id);
-
-    res.render('product',{product: product});
+    const product = await productController.getProductById(id);
+    const categories = await categoryController.getCategorySelected(product.category_id._id);
+    res.render('product_edit',{product: product, categories: categories});
 })
 
-router.delete('/:id', async function (req, res) {
-    const data = await productController.getProducts();
-    const itemIndex= data(req.params.id);
-    if (itemIndex === -1) return res.status(404).json({})
+router.post('/san-pham/:id/edit',[upload.single('image')], async function(req,res,next){
+    let{body,file, params} = req;
+    delete body.image;
+    console.log("post action 1")
+    console.log(file);
+    if(file){
+        console.log("post action 2")
+        let image= `http://192.168.1.6:3000/images/${file.filename}`
+        body={...body,image}
+    }
+    await productController.update(params.id,body);
+    res.redirect('/main/san-pham');
+})
 
-    users.splice(itemIndex, 1)
-    res.json(data)
+router.get('/san-pham/add', async function(req,res,next){
+    const categories = await categoryController.getCategories();
+    res.render('product_insert',{categories: categories});
+})
+
+router.post('/san-pham',[upload.single('image')], async function(req,res,next){
+    let{body,file} = req;
+    let image = '';
+    if(file){
+        image= `http://192.168.1.6:3000/images/${file.filename}`
+    }
+    body={...body,image}
+    await productController.insert(body);
+    res.redirect('/main/san-pham');
+})
+
+
+router.delete('/san-pham/:id/delete', async function (req, res,next) {
+    const {id} = req.params;
+    await productController.delete(id);
+    res.json({result: true});
 });
 
 module.exports = router;

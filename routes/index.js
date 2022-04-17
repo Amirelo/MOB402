@@ -1,27 +1,31 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express'),
+router = express.Router(),
+verifyToken = require('../middle/authJWT'),
+{
+  signin,
+  signup
+} = require('../components/users/controller')
 
 const userController = require('../components/users/controller');
+const async = require('hbs/lib/async');
+
+router.post('/dang-nhap', signin, function(req,res){
+
+})
+
+router.post('/dang-ky', signup, function(req,res){
+
+})
+
+
 
 router.get('/dang-nhap', function (req, res, next) {
   res.render('login');
 });
 
-// POST tiến hành đăng nhập
-router.post('/dang-nhap', async function (req, res, next) {
-  const { username, password } = req.body;
-
-  // tiến hành đăng nhập
-  const user = await userController.login(username, password);
-  console.log(user);
-  if (user) {
-    res.redirect('/main');
-  } else{
-    res.redirect('/dang-nhap');
-  }
-
-
-});
+router.get('/dang-ky', function (req,res, next){
+  res.render('register');
+})
 
 /*
 * http://localhost:3000/dang-xuat

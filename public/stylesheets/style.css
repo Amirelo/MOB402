@@ -85,3 +85,12 @@ html,body{
   .links{
   color: white;
   }
+
+  .custom-card{
+    background-color: #a9a9a9;
+    width: 30%;
+  }
+
+  #image-view{
+    object-fit: cover;
+  }

@@ -4,6 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const mongoose=require('mongoose');
+require('./components/users/model');
+require('./components/categories/model');
+require('./components/products/model');
+
+require("dotenv").config();
+
+mongoose.connect('mongodb+srv://lazyer93:helion210gran799@cluster0.71rke.mongodb.net/Ingredient?retryWrites=true&w=majority', {  
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('>>>>>>>>>> DB Connected!!!!!!'))
+  .catch(err => console.log('>>>>>>>>> DB Error: ', err));
+
 var indexRouter = require('./routes/index');
 var productsRouter = require('./routes/products');
 
@@ -15,17 +29,11 @@ app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/main', productsRouter);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
 
 module.exports = app;

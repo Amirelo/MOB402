@@ -1,62 +1,93 @@
-<div>
-    <nav class="navbar navbar-expand-sm bg-light">
-        <div class="container-fluid">
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link text-black" href="/main">Trang chủ</a></li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link text-black" href="/main/san-pham">Sản phẩm</a></li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link text-black" href="/main/danh-muc">Danh mục</a></li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link text-black" href="/main/khac">Others</a></li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link text-black" href="/main/users">Người dùng</a></li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a href="/main/nguoi-dung"><img src="./images/winter-dog.jpg" width="50"
-                            height="50" class="rounded-circle" alt=""></a></li>
-            </ul>
-        </div>
-    </nav>
+<div class="container mt-3">
+    <table class="table table-hover table-striped">
+        <thead>
 
-    <div class="container mt-3">
-        <table class="table table-hover table-striped">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>description</th>
-                    <th>Category id</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each products}}
-                <tr class=" align-middle">
-                    <td>{{this._id}}</td>
-                    <td>{{this.name}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.quantity}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.cartegory_id.name}}</td>
-                    <td>
-                        <img class="rounded-circle" src={{this.image}} width="100" height="100" />
-                    </td>
-                    <td class="text-center">
-                        <a href="san-pham/{{this._id}}/edit" class="btn btn-link"><i class="fa-solid fa-pencil"></i></a>
-                    </td>
-                    <td class="text-center  align-middle">
-                        <a href="san-pham/{{this._id}}"><i class="fa-solid fa-trash-can"></i></a>
-                        </td>
-                    {{/each}}
-                </tr>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>description</th>
+                <td>Released</td>
+                <th>Category id</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-center">
+                <th colspan="10"><a href="/main/san-pham/add">Add product</a></th>
+            </tr>
+            {{#each products}}
+            <tr class=" align-middle">
+                <td>{{this.index}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.price}}</td>
+                <td>{{this.quantity}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.released}}</td>
+                <td>{{this.category_id.name}}</td>
+                <td>
+                    <img class="rounded-circle" src={{this.image}} width="100" height="100" />
+                </td>
+                <td class="text-center">
+                    <a href="san-pham/{{this._id}}/edit" class="btn btn-link"><i class="fa-solid fa-pencil"></i></a>
+                </td>
+                <td class="text-center">
+                    <button onclick="onClickDelete('{{this._id}}')" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#confirmModal"><i class="fa-solid fa-trash-can"></i></button>
+                </td>
+                {{/each}}
+            </tr>
 
-            </tbody>
-        </table>
-    </div>
+        </tbody>
+    </table>
 </div>
+
+<!--  Modals-->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Delete product</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <h3>Are you sure?</h3>
+                        <div class="form-group modal-footer">
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal">No</button>
+                            <button type="button" onclick="onDelete()" class="btn btn-primary">Yes</button>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <!-- End Modals-->
+
+
+
+<script>
+let deleted_id;
+
+    const onClickDelete = (id) => {
+        deleted_id = id;
+        console.log(deleted_id)
+    }
+
+    const fetchAPI = async (url, option) => {
+        const res = await fetch(url, option);
+        return res.json();
+    }
+
+    const onDelete = async () => {
+        const url = `http://localhost:3000/main/san-pham/${deleted_id}/delete`;
+        console.log(url);
+        const option = {
+            method: 'delete',
+            headers: { 'Content-Type': 'application/json' }
+        }
+        console.log(option);
+        try {
+            await fetchAPI(url, option);
+            window.location.href = '/main/san-pham';
+        } catch (e) { console.log('Delete error: ', e) }
+    }
+</script>
